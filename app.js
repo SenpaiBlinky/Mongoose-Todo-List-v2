@@ -19,7 +19,7 @@ app.use(express.static("public"))
 
 
 // mongoose
-mongoose.connect("mongodb://127.0.0.1:27017/todolistDB");
+mongoose.connect("mongodb+srv://admin-richi:straighttogold1@cluster0.zniop21.mongodb.net/todolistDB");
 
 const itemsSchema = {
     name: String
@@ -29,11 +29,11 @@ const Item = mongoose.model("Item", itemsSchema)
 
 // adding new items to the db
 
-const listItemTwo = new Item ({
-    name: "Brush Teeth"
+const listItemOne = new Item ({
+    name: "Dumpy Wumpy"
 })
 
-const listItemOne = new Item ({
+const listItemTwo = new Item ({
     name: "Brush Teeth"
 })
 
@@ -43,7 +43,12 @@ const listItemThree = new Item ({
 
 const defaultItems = [listItemOne, listItemTwo, listItemThree]
 
+const listSchema = {
+    name: String,
+    items: [itemsSchema]
+}
 
+const List = mongoose.model("List", listSchema)
 
 
 // get and posts
@@ -118,16 +123,39 @@ app.post("/delete", function(req, res) {
 })
 
 
-app.get("/work", function(req, res) {
-    res.render("list", {listTitle: "Work List", newListItems: workItems})
-})
+// app.get("/:customListName", function(req, res){
+//     const customListName = req.params.customListName
 
-app.post("/work", function(req, res) {
-    let item = req.body.newItem;
-    workItems.push(item)
-    res.redirect("/work")
-})
+//     List.findOne({name: customListName}, function(err, foundList){
+//         if (!err){
+//             if (!foundList){
 
-app.listen(3000, function(){
+//                 // creates a new list
+//                 const list = new List ({
+//                     name: customListName,
+//                     items: defaultItems
+//                 });
+            
+//                 list.save()
+
+//                 res.redirect("/" + customListName)
+
+//             } else {
+
+//                 res.render("list", {listTitle: foundList.name, newListItems: foundList.items})
+
+//             }
+//         }
+//     })
+
+    
+// })
+
+let port = process.env.PORT;
+if (port == null || port == ""){
+    port = 3000;
+} 
+
+app.listen(port, function(){
     console.log("Server started on port 3000");
 })
